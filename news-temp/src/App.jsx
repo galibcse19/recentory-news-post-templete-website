@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import html2canvas from 'html2canvas';
-import logo from '../public/logo.png';
+import logo from '../public/logo.png'; // Transparent logo
 import ads from '../public/ads.png';
+import Card from './Card';
 
 function App() {
   const templateRef = useRef(null);
   const [userImage, setUserImage] = useState(null);
   const [userText, setUserText] = useState('');
   const [dateTime, setDateTime] = useState('');
+  const [showDateDetails, setShowDateDetails] = useState(true); // State for checkbox
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -33,7 +35,10 @@ function App() {
 
   const downloadTemplate = () => {
     if (templateRef.current) {
-      html2canvas(templateRef.current).then((canvas) => {
+      html2canvas(templateRef.current, {
+        scale: 3, // High resolution
+        useCORS: true
+      }).then((canvas) => {
         const link = document.createElement('a');
         link.download = 'template.png';
         link.href = canvas.toDataURL();
@@ -48,10 +53,10 @@ function App() {
 
       <div className="mb-4">
         <div>
-        <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, setUserImage)} />
+          <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, setUserImage)} />
         </div>
-        <div className='mt-2'>
-        <input
+        <div className="mt-2">
+          <input
             type="text"
             placeholder="Enter News Title"
             className="border-2 border-orange-600 p-4"
@@ -61,9 +66,22 @@ function App() {
         </div>
       </div>
 
+      {/* Checkbox to show/hide Bengali Date and Details */}
+      <div className="mb-4">
+        <label className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            checked={showDateDetails}
+            onChange={(e) => setShowDateDetails(e.target.checked)}
+            className="form-checkbox"
+          />
+          <span className="text-xl">Show Bengali Date and Details</span>
+        </label>
+      </div>
+
       <div
         ref={templateRef}
-        className="mx-auto relative bg-gradient-to-br from-gray-200 via-white to-gray-100 shadow-xl"
+        className="mx-auto relative bg-gradient-to-br from-yellow-500 to-orange-700 shadow-xl"
         style={{
           width: '1080px',
           height: '1080px',
@@ -74,30 +92,42 @@ function App() {
       >
         {/* Top - Logo */}
         <div className="absolute top-4 right-4 z-10">
-          <img src={logo} alt="Logo" className="h-32 w-32 rounded-full object-contain border-2 border-white shadow" />
+          <img
+            src={logo}
+            alt="Logo"
+            className="h-40 w-40 object-contain"
+          />
         </div>
 
-        {/* Center - Middle Image */}
-        <div className="flex flex-col justify-center -mt-24 items-center h-full text-center">
-          {userImage && (
+        {/* First Section: User Uploaded Image (Full Width) */}
+        {userImage && (
+          <div className="w-[98%] h-[50%] mx-auto mt-2">
             <img
               src={userImage}
-              alt="Uploaded"
-              className="h-[60%] w-full object-cover"
+              alt="User Uploaded"
+              className="h-full w-full object-cover rounded-lg"
             />
-          )}
+          </div>
+        )}
+
+        {/* Second Section: User Text */}
+        <div className={`px-6 py-6 w-full h-[50%] flex ${!userImage ? 'items-center justify-center' : ''}`}>
           {userText && (
-            <p className="text-5xl mt-6 px-16 text-center leading-snug font-extrabold tracking-wide text-black font-serif">
+            <p className="text-[50px] leading-relaxed text-center font-serif font-black text-white drop-shadow-xl">
               {userText}
             </p>
           )}
         </div>
 
-        {/* Bengali Date and Details */}
-        <div className="px-4 py-2 pb-6 bg-white rounded shadow flex justify-between border border-gray-300 absolute bottom-32 w-[80%] left-[10%] space-x-4">
-          <div className="text-xl font-bold text-gray-800">{dateTime}</div>
-          <div className="text-xl font-bold text-gray-800">বিস্তারিত কমেন্টে</div>
-        </div>
+        {/* Bengali Date and Details - Conditional Render */}
+        {showDateDetails && (
+          <div className="px-6 py-4 pb-10 bg-white rounded-lg shadow-2xl flex flex-col items-center justify-center absolute bottom-32 w-[80%] left-[10%]">
+            <div className="flex justify-between w-full">
+              <div className="text-3xl font-extrabold text-black">{dateTime}</div>
+              <div className="text-3xl font-extrabold text-black">বিস্তারিত কমেন্টে</div>
+            </div>
+          </div>
+        )}
 
         {/* Bottom - Ad Image and Branding */}
         <div className="absolute bottom-0 w-full bg-black flex items-center justify-between">
@@ -112,6 +142,8 @@ function App() {
       >
         Download Template
       </button>
+
+      <Card />
     </div>
   );
 }
