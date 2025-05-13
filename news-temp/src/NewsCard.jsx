@@ -5,6 +5,7 @@ import logo from '../public/logo.jpg'; // Adjust if needed
 const NewsCard = () => {
     const [userImage, setUserImage] = useState(null);
     const [headline, setHeadline] = useState('');
+    const [isRecentNews, setIsRecentNews] = useState(true); // ✅ New state
     const newsCardRef = useRef(null);
 
     const handleImageChange = (e) => {
@@ -17,6 +18,10 @@ const NewsCard = () => {
 
     const handleHeadlineChange = (e) => {
         setHeadline(e.target.value);
+    };
+
+    const handleNewsTypeToggle = () => {
+        setIsRecentNews(prev => !prev); // ✅ Toggle logic
     };
 
     useEffect(() => {
@@ -55,8 +60,21 @@ const NewsCard = () => {
                 value={headline}
                 onChange={handleHeadlineChange}
                 placeholder="Enter your news headline here..."
-                className="w-2/3 sm:w-1/2 px-4 py-2 rounded-lg shadow-sm border-4 border-[#F77F00] focus:outline-none focus:ring-2 focus:ring-[#dc4a01] mb-8"
+                className="w-2/3 sm:w-1/2 px-4 py-2 rounded-lg shadow-sm border-4 border-[#F77F00] focus:outline-none focus:ring-2 focus:ring-[#dc4a01] mb-4"
             />
+
+            {/* ✅ Checkbox to toggle between Breaking and Recent News */}
+            <label className="flex items-center gap-3 mb-4">
+                <input
+                    type="checkbox"
+                    checked={isRecentNews}
+                    onChange={handleNewsTypeToggle}
+                    className="w-5 h-5 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+                />
+                <span className="text-lg font-medium text-gray-700">
+                    Show as <span className="font-bold">{isRecentNews ? "Recent News" : "Breaking News"}</span>
+                </span>
+            </label>
 
             <input
                 type="file"
@@ -88,7 +106,10 @@ const NewsCard = () => {
                 </div>
 
                 <div className="px-12 pb-8 bg-[#dc4a01] text-white flex flex-col sm:flex-row justify-between items-center">
-                    <h2 className="text-4xl font-semibold uppercase tracking-widest">breaking News</h2>
+                    {/* ✅ Dynamic text here */}
+                    <h2 className="text-4xl font-semibold uppercase tracking-widest">
+                        {isRecentNews ? "Recent News" : "Breaking News"}
+                    </h2>
                     <span className="text-3xl font-medium uppercase mt-5 sm:mt-0">{today}</span>
                 </div>
 
