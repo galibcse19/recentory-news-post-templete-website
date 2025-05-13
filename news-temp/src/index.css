@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* @font-face {
+    font-family: 'TonnyBanglaMJ';
+    src: url('/fonts/TonnyBanglaMJBold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+} */
+
+@font-face {
+    font-family: 'DhonooMJ';
+    src: url('/fonts/DhonooMJBold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
